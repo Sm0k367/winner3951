@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Epic Tech AI Dev 2.0 | Advanced Chat Bot Platform</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- Additional Styles for Cursor and Particles -->
+  <style>
+    /* Background Particles */
+    .background-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .bg-particle {
+      position: absolute;
+      background-color: var(--accent-blue);
+      border-radius: 50%;
+      animation: float-around linear infinite;
+    }
+    
+    @keyframes float-around {
+      0% {
+        transform: translateY(0) translateX(0);
+      }
+      25% {
+        transform: translateY(-20vh) translateX(10vw);
+      }
+      50% {
+        transform: translateY(0) translateX(20vw);
+      }
+      75% {
+        transform: translateY(20vh) translateX(10vw);
+      }
+      100% {
+        transform: translateY(0) translateX(0);
+      }
+    }
+    
+    /* Custom Cursor */
+    .custom-cursor {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 2px solid var(--accent-blue);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+      z-index: 9999;
+      mix-blend-mode: difference;
+    }
+    
+    .cursor-dot {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-cyan);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      transition: transform 0.1s;
+    }
+    
+    .cursor-hover {
+      width: 60px;
+      height: 60px;
+      border-color: var(--accent-cyan);
+      background-color: rgba(0, 212, 255, 0.1);
+    }
+    
+    /* Hide default cursor when custom cursor is active */
+    body:has(.custom-cursor) {
+      cursor: none;
+    }
+    
+    /* Particle Animation */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    
+    /* Notification System */
+    .notification-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 350px;
+    }
+    
+    .notification {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      border-left: 4px solid var(--accent-blue);
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    .notification-success {
+      border-left-color: #00d68f;
+    }
+    
+    .notification-error {
+      border-left-color: #ff3d71;
+    }
+    
+    .notification-info {
+      border-left-color: var(--accent-blue);
+    }
+    
+    .notification-icon {
+      margin-right: 15px;
+      font-size: 20px;
+      color: var(--accent-blue);
+    }
+    
+    .notification-success .notification-icon {
+      color: #00d68f;
+    }
+    
+    .notification-error .notification-icon {
+      color: #ff3d71;
+    }
+    
+    .notification-content {
+      flex: 1;
+    }
+    
+    .notification-message {
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    
+    .notification-close {
+      background: transparent;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      font-size: 16px;
+      transition: color 0.2s;
+    }
+    
+    .notification-close:hover {
+      color: var(--text-primary);
+    }
+    
+    /* Voice Recognition Animation */
+    .voice-btn.active {
+      animation: pulse 1.5s infinite;
+      background: var(--accent-cyan);
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 15px rgba(0, 212, 255, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(0, 212, 255, 0);
+      }
+    }
+    
+    /* Neural Network Visualization */
+    .neural-network {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.2;
+      z-index: 0;
+    }
+    
+    .neural-node {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background-color: var(--accent-blue);
+      border-radius: 50%;
+    }
+    
+    .neural-connection {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+      transform-origin: left center;
+      opacity: 0.3;
+    }
+    
+    /* AI Avatar Animation */
+    .ai-assistant.active .ai-avatar {
+      animation: pulse-glow 2s;
+    }
+    
+    @keyframes pulse-glow {
+      0% {
+        box-shadow: 0 0 0 0 rgba(58, 123, 213, 0.7), 0 0 0 0 rgba(138, 63, 209, 0.7);
+      }
+      50% {
+        box-shadow: 0 0 30px 10px rgba(58, 123, 213, 0.5), 0 0 30px 10px rgba(138, 63, 209, 0.5);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(58, 123, 213, 0), 0 0 0 0 rgba(138, 63, 209, 0);
+      }
+    }
+    
+    /* Digital Rain Effect */
+    .digital-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.05;
+    }
+    
+    .rain-column {
+      position: absolute;
+      top: -100px;
+      font-family: var(--font-mono);
+      color: var(--accent-cyan);
+      font-size: 14px;
+      line-height: 1;
+      animation: digital-rain linear infinite;
+    }
+    
+    @keyframes digital-rain {
+      0% {
+        transform: translateY(-100%);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+
+    /* Hero Image */
+    .hero {
+      position: relative;
+      background: linear-gradient(rgba(10, 14, 23, 0.7), rgba(10, 14, 23, 0.9)), url('assets/images/hero-image.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+<body>
+  <!-- Digital Rain Effect -->
+  <div class="digital-rain" id="digitalRain"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="flex flex-between">
+        <a href="#" class="logo">
+          <span class="logo-icon"><i class="fas fa-brain"></i></span>
+          <span>Epic Tech AI</span>
+        </a>
+        
+        <nav class="nav">
+          <ul class="nav-list">
+            <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
+            <li class="nav-item"><a href="#features" class="nav-link">Features</a></li>
+            <li class="nav-item"><a href="#demo" class="nav-link">Demo</a></li>
+            <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+            <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+          </ul>
+          
+          <a href="https://buy.stripe.com/dR6dRZ7Gk8L16FaeUX" target="_blank" class="btn btn-primary ml-4">Get Started</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">Next-Gen AI Chat Platform</h1>
+        <p class="hero-subtitle">Experience the future of human-AI collaboration with our advanced chat platform powered by cutting-edge artificial intelligence.</p>
+        
+        <div class="hero-buttons">
+          <a href="#demo" class="btn btn-primary">
+            <i class="fas fa-robot btn-icon"></i>
+            Try Demo
+          </a>
+          <a href="https://buy.stripe.com/8wM6px5ycf9pgfK000" target="_blank" class="btn btn-outline">
+            <i class="fas fa-crown btn-icon"></i>
+            Become an AI Engineer
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Holographic UI Elements -->
+    <div class="holo-element" style="top: 20%; left: 60%; width: 200px; height: 100px;">
+      <div style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-blue);">
+        <div>AI SYSTEM STATUS</div>
+        <div style="margin-top: 10px; display: flex; justify-content: space-between;">
+          <span>Neural Processing:</span>
+          <span>ONLINE</span>
+        </div>
+        <div style="margin-top: 5px; display: flex; justify-content: space-between;">
+          <span>Knowledge Base:</span>
+          <span>ACTIVE</span>
+        </div>
+        <div style="margin-top: 5px; display: flex; justify-content: space-between;">
+          <span>Response Engine:</span>
+          <span>OPTIMAL</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="holo-element" style="bottom: 15%; right: 10%; width: 150px; height: 150px;">
+      <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--accent-cyan); display: flex; justify-content: center; align-items: center; position: relative;">
+          <i class="fas fa-microchip" style="font-size: 30px; color: var(--accent-cyan);"></i>
+          <div style="position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 1px solid var(--accent-blue); animation: spin 10s linear infinite;"></div>
+          <div style="position: absolute; width: 120%; height: 120%; border-radius: 50%; border: 1px solid var(--accent-purple); animation: spin 15s linear infinite reverse;"></div>
+        </div>
+        <div style="margin-top: 10px; font-family: var(--font-mono); font-size: 12px; color: var(--accent-cyan);">QUANTUM CORE</div>
+      </div>
+    </div>
+    
+    <div class="holo-element" style="top: 60%; left: 15%; width: 180px; height: 80px;">
+      <div style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-purple);">
+        <div>NEURAL NETWORK</div>
+        <div style="margin-top: 10px; height: 40px; background: rgba(138, 63, 209, 0.1); border-radius: 4px; padding: 5px; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-wrap: wrap; gap: 3px; padding: 5px;">
+            <div style="width: 3px; height: 3px; background-color: var(--accent-purple); border-radius: 50%;"></div>
+            <div style="width: 3px; height: 3px; background-color: var(--accent-purple); border-radius: 50%;"></div>
+            <div style="width: 3px; height: 3px; background-color: var(--accent-purple); border-radius: 50%;"></div>
+            <div style="width: 3px; height: 3px; background-color: var(--accent-purple); border-radius: 50%;"></div>
+            <div style="width: 3px; height: 3px; background-color: var(--accent-purple); border-radius: 50%;"></div>
+            <div style="width: 3px; height: 3px; background-color: var(--accent-purple); border-radius: 50%;"></div>
+            <div style="width: 3px; height: 3px; background-color: var(--accent-purple); border-radius: 50%;"></div>
+            <div style="width: 3px; height: 3px; background-color: var(--accent-purple); border-radius: 50%;"></div>
+            <div style="width: 3px; height: 3px; background-color: var(--accent-purple); border-radius: 50%;"></div>
+            <div style="width: 3px; height: 3px; background-color: var(--accent-purple); border-radius: 50%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="section features">
+    <div class="container">
+      <h2 class="text-center mb-5">Advanced AI Features</h2>
+      
+      <div class="features-grid grid">
+        <div class="feature-card card">
+          <div class="feature-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3 class="feature-title">Neural Processing</h3>
+          <p class="feature-description">Our advanced neural networks process information with human-like understanding, enabling natural conversations and complex problem-solving.</p>
+        </div>
+        
+        <div class="feature-card card">
+          <div class="feature-icon">
+            <i class="fas fa-microchip"></i>
+          </div>
+          <h3 class="feature-title">Quantum Computing</h3>
+          <p class="feature-description">Leveraging quantum algorithms for unprecedented processing power, allowing our AI to handle complex tasks with remarkable speed and efficiency.</p>
+        </div>
+        
+        <div class="feature-card card">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3 class="feature-title">Advanced Security</h3>
+          <p class="feature-description">Enterprise-grade encryption and privacy controls ensure your conversations and data remain secure and confidential at all times.</p>
+        </div>
+        
+        <div class="feature-card card">
+          <div class="feature-icon">
+            <i class="fas fa-code"></i>
+          </div>
+          <h3 class="feature-title">Code Generation</h3>
+          <p class="feature-description">Generate production-ready code in multiple programming languages with intelligent suggestions and optimizations.</p>
+        </div>
+        
+        <div class="feature-card card">
+          <div class="feature-icon">
+            <i class="fas fa-language"></i>
+          </div>
+          <h3 class="feature-title">Multilingual Support</h3>
+          <p class="feature-description">Communicate in over 100 languages with near-native fluency, breaking down language barriers for global collaboration.</p>
+        </div>
+        
+        <div class="feature-card card">
+          <div class="feature-icon">
+            <i class="fas fa-project-diagram"></i>
+          </div>
+          <h3 class="feature-title">Knowledge Graph</h3>
+          <p class="feature-description">Our AI builds comprehensive knowledge graphs to connect concepts and provide contextually relevant information for any query.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Section -->
+  <section id="demo" class="section">
+    <div class="container">
+      <h2 class="text-center mb-5">Experience the Future</h2>
+      
+      <div class="chat-container">
+        <!-- Chat Sidebar -->
+        <div class="chat-sidebar">
+          <div class="sidebar-header">
+            <h4 class="mb-0">Conversations</h4>
+            <div class="sidebar-actions">
+              <button class="sidebar-action-btn" title="Export Conversations" id="exportBtn">
+                <i class="fas fa-download"></i>
+              </button>
+              <button class="sidebar-action-btn" title="Import Conversations" id="importBtn">
+                <i class="fas fa-upload"></i>
+              </button>
+              <input type="file" id="import-file" accept=".json" style="display: none;">
+            </div>
+          </div>
+          
+          <ul class="chat-list" id="conversationsList">
+            <!-- Conversations will be loaded dynamically -->
+            <li class="chat-item active" data-conversation-id="current">
+              <div class="chat-item-title">Current Chat</div>
+              <div class="chat-item-preview">Hello! I'm your AI assistant...</div>
+            </li>
+          </ul>
+          
+          <button class="btn btn-outline w-100 mt-3" id="newChatBtn">
+            <i class="fas fa-plus btn-icon"></i>
+            New Chat
+          </button>
+        </div>
+        
+        <!-- Chat Main -->
+        <div class="chat-main">
+          <div class="chat-header">
+            <h3 class="chat-title">General Assistant</h3>
+            
+            <div class="chat-actions">
+              <button class="chat-action-btn theme-btn" title="Toggle Theme">
+                <i class="fas fa-moon"></i>
+              </button>
+              <button class="chat-action-btn" title="Clear Chat">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+              <button class="chat-action-btn" title="Settings">
+                <i class="fas fa-cog"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="chat-messages">
+            <!-- AI Welcome Message -->
+            <div class="message message-ai">
+              <div class="message-avatar">
+                <img src="assets/images/ai-avatar.jpg" alt="AI Avatar">
+              </div>
+              <div class="message-content">
+                <div class="message-text">Hello! I'm your AI assistant. How can I help you today?</div>
+                <div class="message-time">10:30 AM</div>
+              </div>
+            </div>
+            
+            <!-- User Message Example -->
+            <div class="message message-user">
+              <div class="message-avatar">
+                <img src="assets/images/user-avatar.jpg" alt="User Avatar">
+              </div>
+              <div class="message-content">
+                <div class="message-text">Hi! Can you tell me about your capabilities?</div>
+                <div class="message-time">10:31 AM</div>
+              </div>
+            </div>
+            
+            <!-- AI Response Example -->
+            <div class="message message-ai">
+              <div class="message-avatar">
+                <img src="assets/images/ai-avatar.jpg" alt="AI Avatar">
+              </div>
+              <div class="message-content">
+                <div class="message-text">
+                  I can assist you with a wide range of tasks, including:
+                  <br><br>
+                  • Answering questions and providing information<br>
+                  • Generating and reviewing code in multiple languages<br>
+                  • Creating content like articles, emails, and creative writing<br>
+                  • Analyzing data and providing insights<br>
+                  • Helping with learning and explaining complex concepts<br>
+                  • Brainstorming ideas and problem-solving<br>
+                  • Translating between languages<br>
+                  <br>
+                  Feel free to ask me anything, and I'll do my best to help!
+                </div>
+                <div class="message-time">10:32 AM</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="chat-input-container">
+            <form class="chat-form">
+              <div class="chat-input-wrapper">
+                <input type="text" class="chat-input" placeholder="Type your message here..." autocomplete="off">
+                
+                <div class="chat-input-actions">
+                  <button type="button" class="chat-input-btn voice-btn" title="Voice Input">
+                    <i class="fas fa-microphone"></i>
+                  </button>
+                  <label for="file-upload" class="chat-input-btn" title="Upload File">
+                    <i class="fas fa-paperclip"></i>
+                    <input type="file" id="file-upload" class="file-upload-input" multiple>
+                  </label>
+                  <button type="button" class="chat-input-btn" title="Insert Code">
+                    <i class="fas fa-code"></i>
+                  </button>
+                </div>
+                
+                <div class="file-preview-container" style="display: none;">
+                  <div class="file-preview-header">
+                    <span class="file-preview-title">Files to Upload</span>
+                    <button type="button" class="file-preview-clear">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                  <div class="file-preview-list"></div>
+                </div>
+                
+                <button type="submit" class="chat-send-btn" title="Send Message">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;">
+        <div>
+          <h2>About Epic Tech AI</h2>
+          <p>Epic Tech AI Dev 2.0 represents the pinnacle of artificial intelligence technology, designed to revolutionize how humans interact with machines. Our platform combines cutting-edge neural networks, quantum computing algorithms, and advanced natural language processing to create an AI assistant that truly understands and adapts to your needs.</p>
+          
+          <p>Unlike conventional chatbots, our system features a sophisticated emotional intelligence layer that allows it to recognize sentiment, adapt its tone, and provide responses that feel genuinely human while maintaining the computational advantages of AI.</p>
+          
+          <p>Developed by a team of world-class AI researchers and engineers, Epic Tech AI is constantly learning and evolving, with regular updates that expand its capabilities and knowledge base.</p>
+          
+          <div class="mt-4">
+            <a href="#" class="btn btn-primary">Our Technology</a>
+          </div>
+        </div>
+        
+        <div class="ai-assistant">
+          <div class="ai-holo-ring"></div>
+          <div class="ai-holo-ring"></div>
+          <div class="ai-holo-ring"></div>
+          
+          <div class="ai-avatar">
+            <img src="assets/images/ai-avatar.jpg" alt="AI Assistant">
+          </div>
+          
+          <div class="ai-status">
+            <span class="ai-status-text">Ready</span>
+          </div>
+          
+          <div class="ai-particles"></div>
+          
+          <!-- Neural Network Visualization -->
+          <div class="neural-network" id="neuralNetwork"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="section">
+    <div class="container">
+      <h2 class="text-center mb-5">Flexible Pricing Plans</h2>
+      
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem;">
+        <div class="card">
+          <h3 class="text-center">Starter</h3>
+          <div class="text-center mb-4">
+            <span style="font-size: 4.8rem; font-weight: 700;">$29</span>
+            <span style="color: var(--text-tertiary);">/month</span>
+          </div>
+          
+          <ul style="list-style: none; margin-bottom: 3rem;">
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>Basic AI capabilities</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>5 specialized assistants</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>1,000 messages per month</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>Standard response time</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>Email support</span>
+            </li>
+          </ul>
+          
+          <a href="https://buy.stripe.com/aEU4hp0dS6CT2oU6op" target="_blank" class="btn btn-outline w-100">Get Started</a>
+        </div>
+        
+        <div class="card" style="transform: scale(1.05); border-color: var(--accent-blue); box-shadow: var(--glow-blue), 0 15px 40px rgba(0, 0, 0, 0.3);">
+          <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--gradient-blue); padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: 600;">
+            MOST POPULAR
+          </div>
+          
+          <h3 class="text-center">Professional</h3>
+          <div class="text-center mb-4">
+            <span style="font-size: 4.8rem; font-weight: 700;">$79</span>
+            <span style="color: var(--text-tertiary);">/month</span>
+          </div>
+          
+          <ul style="list-style: none; margin-bottom: 3rem;">
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>Advanced AI capabilities</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>20 specialized assistants</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>5,000 messages per month</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>Priority response time</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>24/7 priority support</span>
+            </li>
+          </ul>
+          
+          <a href="https://buy.stripe.com/7sI3dlgcQ4uL0gMeUW" target="_blank" class="btn btn-primary w-100">Get Started</a>
+        </div>
+        
+        <div class="card">
+          <h3 class="text-center">Enterprise</h3>
+          <div class="text-center mb-4">
+            <span style="font-size: 4.8rem; font-weight: 700;">$199</span>
+            <span style="color: var(--text-tertiary);">/month</span>
+          </div>
+          
+          <ul style="list-style: none; margin-bottom: 3rem;">
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>Full AI capabilities suite</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>Unlimited specialized assistants</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>Unlimited messages</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>Ultra-fast response time</span>
+            </li>
+            <li style="margin-bottom: 1.5rem; display: flex; align-items: center;">
+              <i class="fas fa-check" style="color: var(--accent-blue); margin-right: 1rem;"></i>
+              <span>Dedicated account manager</span>
+            </li>
+          </ul>
+          
+          <a href="https://buy.stripe.com/8wM6px5ycf9pgfK000" target="_blank" class="btn btn-outline w-100">Become an AI Engineer</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2 class="text-center mb-5">Get in Touch</h2>
+      
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 4rem;">
+        <div class="card">
+          <h3 class="mb-4">Contact Information</h3>
+          
+          <div style="margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; margin-right: 1.5rem;">
+                <i class="fas fa-map-marker-alt" style="color: var(--accent-blue);"></i>
+              </div>
+              <div>
+                <h5 style="margin-bottom: 0.5rem;">Address</h5>
+                <p style="margin-bottom: 0;">123 Innovation Drive, Tech City, TC 98765</p>
+              </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; margin-right: 1.5rem;">
+                <i class="fas fa-phone-alt" style="color: var(--accent-blue);"></i>
+              </div>
+              <div>
+                <h5 style="margin-bottom: 0.5rem;">Phone</h5>
+                <p style="margin-bottom: 0;">+1 (555) 123-4567</p>
+              </div>
+            </div>
+            
+            <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; margin-right: 1.5rem;">
+                <i class="fas fa-envelope" style="color: var(--accent-blue);"></i>
+              </div>
+              <div>
+                <h5 style="margin-bottom: 0.5rem;">Email</h5>
+                <p style="margin-bottom: 0;">epictchai@gmail.com</p>
+              </div>
+            </div>
+          </div>
+          
+          <h4 class="mb-3">Follow Us</h4>
+          <div style="display: flex; gap: 1.5rem;">
+            <a href="https://x.com/EpicTechAI" target="_blank" style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--accent-blue); transition: all var(--transition-fast);">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--accent-blue); transition: all var(--transition-fast);">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#" style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--accent-blue); transition: all var(--transition-fast);">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="#" style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--accent-blue); transition: all var(--transition-fast);">
+              <i class="fab fa-instagram"></i>
+            </a>
+          </div>
+          
+          <div style="margin-top: 2rem;">
+            <h4 class="mb-3">Upgrade to Premium</h4>
+            <a href="https://buy.stripe.com/dR6dRZ7Gk8L16FaeUX" target="_blank" class="btn btn-primary w-100">
+              <i class="fas fa-crown btn-icon"></i>
+              Upgrade to Premium
+            </a>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3 class="mb-4">Send a Message</h3>
+          
+          <form>
+            <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 2rem;">
+              <div class="form-group">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" id="name" class="form-input" placeholder="Your name">
+              </div>
+              
+              <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" class="form-input" placeholder="Your email">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="subject" class="form-label">Subject</label>
+              <input type="text" id="subject" class="form-input" placeholder="Message subject">
+            </div>
+            
+            <div class="form-group">
+              <label for="message" class="form-label">Message</label>
+              <textarea id="message" class="form-input" rows="5" placeholder="Your message"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-paper-plane btn-icon"></i>
+              Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Settings Modal -->
+  <div class="settings-modal" id="settingsModal">
+    <div class="settings-content card">
+      <div class="settings-header">
+        <h3>AI Settings</h3>
+        <button class="settings-close-btn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="settings-body">
+        <div class="form-group">
+          <label for="apiKey" class="form-label">OpenAI API Key</label>
+          <div class="api-key-input-wrapper">
+            <input type="password" id="apiKey" class="form-input" placeholder="Enter your OpenAI API key">
+            <button class="toggle-password-btn">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+          <p class="form-help">Your API key is stored locally in your browser and never sent to our servers.</p>
+        </div>
+        
+        <div class="form-group">
+          <label for="aiModel" class="form-label">AI Model</label>
+          <select id="aiModel" class="form-input">
+            <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Faster)</option>
+            <option value="gpt-4">GPT-4 (More Capable)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Voice Options</label>
+          <div class="voice-options">
+            <div class="voice-option">
+              <label class="toggle-switch">
+                <input type="checkbox" id="voiceInput">
+                <span class="toggle-slider"></span>
+              </label>
+              <div class="voice-option-label">
+                <div class="voice-option-title">Voice Input</div>
+                <div class="voice-option-desc">Use your microphone to speak to the AI</div>
+              </div>
+            </div>
+            
+            <div class="voice-option">
+              <label class="toggle-switch">
+                <input type="checkbox" id="voiceOutput">
+                <span class="toggle-slider"></span>
+              </label>
+              <div class="voice-option-label">
+                <div class="voice-option-title">Voice Output</div>
+                <div class="voice-option-desc">AI will speak responses aloud</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">AI Personality</label>
+          <div class="personality-options">
+            <div class="personality-option active" data-personality="professional">
+              <div class="personality-icon">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <div class="personality-label">Professional</div>
+            </div>
+            <div class="personality-option" data-personality="academic">
+              <div class="personality-icon">
+                <i class="fas fa-graduation-cap"></i>
+              </div>
+              <div class="personality-label">Academic</div>
+            </div>
+            <div class="personality-option" data-personality="developer">
+              <div class="personality-icon">
+                <i class="fas fa-code"></i>
+              </div>
+              <div class="personality-label">Developer</div>
+            </div>
+            <div class="personality-option" data-personality="creative">
+              <div class="personality-icon">
+                <i class="fas fa-paint-brush"></i>
+              </div>
+              <div class="personality-label">Creative</div>
+            </div>
+            <div class="personality-option" data-personality="data">
+              <div class="personality-icon">
+                <i class="fas fa-chart-bar"></i>
+              </div>
+              <div class="personality-label">Data Analyst</div>
+            </div>
+            <div class="personality-option" data-personality="business">
+              <div class="personality-icon">
+                <i class="fas fa-briefcase"></i>
+              </div>
+              <div class="personality-label">Business</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-actions">
+          <button class="btn btn-outline" id="clearConversationBtn">
+            <i class="fas fa-trash-alt btn-icon"></i>
+            Clear Conversation
+          </button>
+          <button class="btn btn-primary" id="saveSettingsBtn">
+            <i class="fas fa-save btn-icon"></i>
+            Save Settings
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer style="background-color: var(--primary-medium); padding: 6rem 0 2rem;">
+    <div class="container">
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 4rem; margin-bottom: 4rem;">
+        <div>
+          <a href="#" class="logo" style="margin-bottom: 2rem; display: inline-block;">
+            <span class="logo-icon"><i class="fas fa-brain"></i></span>
+            <span>Epic Tech AI</span>
+          </a>
+          
+          <p style="color: var(--text-secondary);">Experience the future of human-AI collaboration with our advanced chat platform powered by cutting-edge artificial intelligence.</p>
+        </div>
+        
+        <div>
+          <h4 style="margin-bottom: 2rem;">Quick Links</h4>
+          
+          <ul style="list-style: none;">
+            <li style="margin-bottom: 1rem;"><a href="#" style="color: var(--text-secondary); transition: color var(--transition-fast);">Home</a></li>
+            <li style="margin-bottom: 1rem;"><a href="#features" style="color: var(--text-secondary); transition: color var(--transition-fast);">Features</a></li>
+            <li style="margin-bottom: 1rem;"><a href="#demo" style="color: var(--text-secondary); transition: color var(--transition-fast);">Demo</a></li>
+            <li style="margin-bottom: 1rem;"><a href="#about" style="color: var(--text-secondary); transition: color var(--transition-fast);">About</a></li>
+            <li style="margin-bottom: 1rem;"><a href="#contact" style="color: var(--text-secondary); transition: color var(--transition-fast);">Contact</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 style="margin-bottom: 2rem;">Resources</h4>
+          
+          <ul style="list-style: none;">
+            <li style="margin-bottom: 1rem;"><a href="#" style="color: var(--text-secondary); transition: color var(--transition-fast);">Documentation</a></li>
+            <li style="margin-bottom: 1rem;"><a href="#" style="color: var(--text-secondary); transition: color var(--transition-fast);">API Reference</a></li>
+            <li style="margin-bottom: 1rem;"><a href="#" style="color: var(--text-secondary); transition: color var(--transition-fast);">Blog</a></li>
+            <li style="margin-bottom: 1rem;"><a href="#" style="color: var(--text-secondary); transition: color var(--transition-fast);">Tutorials</a></li>
+            <li style="margin-bottom: 1rem;"><a href="#" style="color: var(--text-secondary); transition: color var(--transition-fast);">Community</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 style="margin-bottom: 2rem;">Newsletter</h4>
+          
+          <p style="color: var(--text-secondary); margin-bottom: 2rem;">Subscribe to our newsletter for the latest updates and features.</p>
+          
+          <form style="display: flex; margin-bottom: 2rem;">
+            <input type="email" class="form-input" placeholder="Your email" style="border-top-right-radius: 0; border-bottom-right-radius: 0; margin-bottom: 0;">
+            <button type="submit" class="btn btn-primary" style="border-top-left-radius: 0; border-bottom-left-radius: 0; padding: 0 1.5rem;">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <div style="border-top: 1px solid var(--card-border); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+        <div style="color: var(--text-tertiary);">
+          &copy; 2025 Epic Tech AI. All rights reserved.
+        </div>
+        
+        <div>
+          <a href="#" style="color: var(--text-tertiary); margin-right: 2rem; transition: color var(--transition-fast);">Privacy Policy</a>
+          <a href="#" style="color: var(--text-tertiary); margin-right: 2rem; transition: color var(--transition-fast);">Terms of Service</a>
+          <a href="#" style="color: var(--text-tertiary); transition: color var(--transition-fast);">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Additional JavaScript for Neural Network Visualization -->
+  <script>
+    // Create Digital Rain Effect
+    document.addEventListener('DOMContentLoaded', function() {
+      const digitalRain = document.getElementById('digitalRain');
+      
+      if (digitalRain) {
+        // Characters for digital rain
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$+-*/=%\"'#&_(),.;:?!\\|{}<>[]^~";
+        
+        // Create columns
+        for (let i = 0; i < 50; i++) {
+          createRainColumn();
+        }
+        
+        function createRainColumn() {
+          const column = document.createElement('div');
+          column.classList.add('rain-column');
+          
+          // Random position
+          column.style.left = `${Math.random() * 100}%`;
+          
+          // Random speed
+          const speed = Math.random() * 10 + 5;
+          column.style.animationDuration = `${speed}s`;
+          
+          // Random delay
+          column.style.animationDelay = `${Math.random() * 5}s`;
+          
+          // Create characters
+          let columnContent = '';
+          const length = Math.floor(Math.random() * 20) + 10;
+          
+          for (let j = 0; j < length; j++) {
+            const char = chars.charAt(Math.floor(Math.random() * chars.length));
+            columnContent += char + '<br>';
+          }
+          
+          column.innerHTML = columnContent;
+          digitalRain.appendChild(column);
+        }
+      }
+      
+      // Create Neural Network Visualization
+      const neuralNetwork = document.getElementById('neuralNetwork');
+      
+      if (neuralNetwork) {
+        // Create nodes
+        const nodeCount = 20;
+        const nodes = [];
+        
+        for (let i = 0; i < nodeCount; i++) {
+          const node = document.createElement('div');
+          node.classList.add('neural-node');
+          
+          // Random position
+          const x = Math.random() * 100;
+          const y = Math.random() * 100;
+          
+          node.style.left = `${x}%`;
+          node.style.top = `${y}%`;
+          
+          neuralNetwork.appendChild(node);
+          nodes.push({ element: node, x, y });
+        }
+        
+        // Create connections
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            // Only connect some nodes (not all-to-all)
+            if (Math.random() > 0.7) continue;
+            
+            const connection = document.createElement('div');
+            connection.classList.add('neural-connection');
+            
+            const node1 = nodes[i];
+            const node2 = nodes[j];
+            
+            // Calculate distance and angle
+            const dx = node2.x - node1.x;
+            const dy = node2.y - node1.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+            
+            // Set connection style
+            connection.style.width = `${distance}%`;
+            connection.style.left = `${node1.x}%`;
+            connection.style.top = `${node1.y}%`;
+            connection.style.transform = `rotate(${angle}deg)`;
+            
+            neuralNetwork.appendChild(connection);
+          }
+        }
+        
+        // Animate nodes
+        setInterval(() => {
+          nodes.forEach(node => {
+            // Subtle movement
+            const newX = node.x + (Math.random() - 0.5) * 0.5;
+            const newY = node.y + (Math.random() - 0.5) * 0.5;
+            
+            // Keep within bounds
+            if (newX > 0 && newX < 100 && newY > 0 && newY < 100) {
+              node.x = newX;
+              node.y = newY;
+              node.element.style.left = `${newX}%`;
+              node.element.style.top = `${newY}%`;
+            }
+          });
+        }, 2000);
+      }
+    });
+  </script>
+
+  <!-- AI Service -->
+  <script src="js/ai-service.js"></script>
+  
+  <!-- Speech Recognition -->
+  <script src="js/speech-recognition.js"></script>
+  
+  <!-- Database Service -->
+  <script src="js/db-service.js"></script>
+  
+  <!-- API Service -->
+  <script src="js/api-service.js"></script>
+  
+  <!-- Custom JavaScript -->
+  <script src="js/main.js"></script>
+  
+  <!-- Chat Fix Script -->
+  <script src="js/chat-fix.js"></script>
+  
+  <!-- Debug Script -->
+  <script>
+    // Add debug script to check for errors
+    window.addEventListener('error', function(e) {
+      console.error('Global error:', e.message, e.filename, e.lineno);
+      alert('Error detected: ' + e.message + ' at ' + e.filename + ':' + e.lineno);
+    });
+    
+    // Check if all required elements are present
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, checking elements...');
+      
+      // Check chat elements
+      const chatForm = document.querySelector('.chat-form');
+      const chatInput = document.querySelector('.chat-input');
+      const chatSendBtn = document.querySelector('.chat-send-btn');
+      const chatMessages = document.querySelector('.chat-messages');
+      
+      if (!chatForm) console.error('Chat form not found');
+      if (!chatInput) console.error('Chat input not found');
+      if (!chatSendBtn) console.error('Chat send button not found');
+      if (!chatMessages) console.error('Chat messages container not found');
+      
+      // Check if services are initialized
+      if (typeof aiService === 'undefined') console.error('AI Service not initialized');
+      if (typeof speechRecognition === 'undefined') console.error('Speech Recognition not initialized');
+      if (typeof dbService === 'undefined') console.error('Database Service not initialized');
+      
+      // Try to initialize chat form event listener manually
+      if (chatForm) {
+        console.log('Manually initializing chat form');
+        chatForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          console.log('Form submitted');
+          
+          const message = chatInput.value.trim();
+          if (message) {
+            console.log('Sending message:', message);
+            
+            // Add user message
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'message-user');
+            
+            messageElement.innerHTML = `
+              <div class="message-avatar">
+                <img src="assets/images/user-avatar.jpg" alt="User Avatar">
+              </div>
+              <div class="message-content">
+                <div class="message-text">${message}</div>
+                <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+              </div>
+            `;
+            
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Clear input
+            chatInput.value = '';
+            
+            // Add AI response
+            setTimeout(function() {
+              const aiMessageElement = document.createElement('div');
+              aiMessageElement.classList.add('message', 'message-ai');
+              
+              aiMessageElement.innerHTML = `
+                <div class="message-avatar">
+                  <img src="assets/images/ai-avatar.jpg" alt="AI Avatar">
+                </div>
+                <div class="message-content">
+                  <div class="message-text">I'm sorry, but I'm currently experiencing some technical difficulties. Our team is working to resolve this issue. In the meantime, please try refreshing the page or coming back later.</div>
+                  <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                </div>
+              `;
+              
+              chatMessages.appendChild(aiMessageElement);
+              chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
